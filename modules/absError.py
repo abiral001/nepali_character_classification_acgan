@@ -11,9 +11,11 @@ class ABSLoss():
     def comuteloss(self, predicted, actual):
         
         predicted_new = [max(i, self.hp.epsilon) for i in predicted]
-        predicted_old = [min(i, 1-self.hp.epsilon) for i in actual]
+        predicted_new = [min(i, 1-self.hp.epsilon) for i in predicted_new]
+        actual_ = [max(i, self.hp.epsilon) for i in actual]
+        actual_ = [min(i, 1-self.hp.epsilon) for i in actual_]
         predicted_new = np.array(predicted_new)
-        predicted_old = np.array(predicted_old)
+        actual_ = np.array(actual_)
         
-        return -sum(predicted_old * np.log(predicted_new))
+        return -sum(actual_ * np.log(predicted_new))
         
