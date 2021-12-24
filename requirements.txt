@@ -1,4 +1,6 @@
 numpy
-cv2
+opencv-python
 torch
 torchvision
+tensorboard
+matplotlib
