@@ -1,14 +1,14 @@
 import numpy as np
-from absParams import HParams
+from absParams import ABSparams
 
 class ABSLoss():
     def __init__(self, predicted,actual):
         self.predicated = predicted
         self.actual = actual
-        self.hp = HParams()
+        self.hp = ABSparams()
         self.computedloss =self.computeloss(predicted, actual)
         
-    def comuteloss(self, predicted, actual):
+    def computeLoss(self, predicted, actual):
         
         predicted_new = [max(i, self.hp.epsilon) for i in predicted]
         predicted_new = [min(i, 1-self.hp.epsilon) for i in predicted_new]

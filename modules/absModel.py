@@ -46,51 +46,52 @@ class absGen(nn.Module):
         return inp7
 
 class absDis(nn.Module):
-    def __init__(self, image_size, kernel_size_conv, flatten):
+    def __init__(self, image_size, kernel_size_conv):
         super(absDis, self).__init__()
         self.image_size = image_size
-        self.Layer1 = nn.Linear(self.image_size, out_features=2)
+        self.kernel_size_conv = kernel_size_conv
+        self.layer1 = nn.Conv2d(in_features = 3, out_features=16)
         self.conv_layer2 = nn.Sequential(
-            nn.conv2d(in_features = 1, out_features = 2, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
+            nn.Conv2d(in_channels = 16, out_channels = 32, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
             nn.BatchNorm2d(2),
             nn.ReLU(True),  
         )
         self.conv_layer3 = nn.Sequential(
-            nn.conv2d(in_features = 2, out_features = 16, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
+            nn.Conv2d(in_channels = 32, out_channels = 64, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
             nn.BatchNorm2d(16),
             nn.ReLU(True),   
         )
         self.conv_layer4 = nn.Sequential(
-            nn.conv2d(in_features = 16, out_features = 32, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
+            nn.Conv2d(in_channels = 64, out_channels = 128, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
             nn.BatchNorm2d(32),
             nn.ReLU(True),  
         )
         self.conv_layer5 = nn.Sequential(
-            nn.conv2d(in_features = 32, out_features = 8, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
+            nn.Conv2d(in_channels = 128, out_channels = 196, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
             nn.BatchNorm2d(8),
             nn.ReLU(True),  
         )
         self.conv_layer6 = nn.Sequential(
-            nn.conv2d(in_features = 8, out_features = 3, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
+            nn.Conv2d(in_channels = 196, out_channels = 100, kernel_size = self.kernel_size_conv, stride = 2, padding = 2),
             nn.BatchNorm2d(3),
             nn.Tanh(),   ##Tanh  for image 
         )
 
-        self.flatten = nn.Flatten(self.conv_layer6)
-        self.fcnn_layer8 = nn.Linear(in_features = 3, out_channel = 2+36+14)
-        self.sigg = nn.ReLU(self.fcnn_layer8)
+        self.flatten_layer7 = nn.Flatten(self.conv_layer6)
+        self.fcnn_layer8 = nn.Linear(in_features = (-1, 1), out_features = (2+36+14, 1))
+        self.act = nn.softmax(True)
 
 
     def forward(self, input_x):
-        input_1 = nn.layer1(input_x)
-        input_2 = nn._conv_layer2(input_1)
-        input_3 = nn._conv_layer3(input_2)
-        input_4 = nn._conv_layer4(input_3)
-        input_5 = nn._conv_layer5(input_4)
-        input_6 = nn._conv_layer6(input_5)
-        return input_6
+        input_1 = self.layer1(input_x)
+        input_2 = self.conv_layer2(input_1)
+        input_3 = self.conv_layer3(input_2)
+        input_4 = self.conv_layer4(input_3)
+        input_5 = self.conv_layer5(input_4)
+        input_6 = self.conv_layer6(input_5)
+        input_7 = self.flatten_layer7(input_6)
+        input_8 = self.fcnn_layer8(input_7)
+        input_9 = self.act(input_8)
+        return input_9
 
         # activation = bias * input + weight 
-
-
-  
