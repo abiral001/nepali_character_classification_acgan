@@ -3,11 +3,11 @@ from torchvision.transforms import transforms
 import torch
 from absParams import ABSparams
 import os
-import math
+import random
 
 class ABSNormalize:
 
-    def normalizeImages(imagePath, batch_size = 16):
+    def normalizeImages(self, imagePath, batch_size = 16):
         image_list = list()
         params = ABSparams()
         images = os.listdir(imagePath)
@@ -22,7 +22,17 @@ class ABSNormalize:
             image_tensor = transforms.ToTensor()
             tensor_img = image_tensor(image_normalize)
             image_list.append(tensor_img)
-        split_size = math.ceil(len(image_list)/batch_size)
-        print('Splitting the tensor into {} sizes each with {} images'.format(batch_size, split_size))
-        tensor_data = torch.cat(image_list).split(batch_size)
-        return tensor_data
+        tensor_data = torch.cat(image_list)
+        return self.shuffleAndSplit(tensor_data, batch_size)
+
+    def shuffleAndSplit(self, data, batchSize):
+        finalData = list()
+        for images, label in data:
+            print('Processing for {} label'.format(label))
+            label = torch.as_tensor([int(label)])
+            for oneImage in images:
+                finalData.append(oneImage)
+        random.shuffle(finalData)
+        finalData = torch.cat(finalData).split(batchSize)
+        return finalData
+        

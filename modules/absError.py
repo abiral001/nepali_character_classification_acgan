@@ -20,6 +20,6 @@ class ABSLoss():
         
         return -sum(actual_ * np.log(predicted_new))
     
-    def backward(self,computedLoss):
-        ccomputedloss.backward()
+    def backward(self, computedLoss):
+        computedLoss.backward()
         
