@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from absParams import ABSparams
 
 class ABSLoss():
@@ -18,4 +19,7 @@ class ABSLoss():
         actual_ = np.array(actual_)
         
         return -sum(actual_ * np.log(predicted_new))
+    
+    def backward(self,computedLoss):
+        ccomputedloss.backward()
         
