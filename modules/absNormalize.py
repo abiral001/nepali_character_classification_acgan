@@ -4,6 +4,8 @@ import torch
 from absParams import ABSparams
 import os
 import random
+import math
+from torch.utils.data import DataLoader
 
 class ABSNormalize:
 
@@ -22,17 +24,22 @@ class ABSNormalize:
             image_tensor = transforms.ToTensor()
             tensor_img = image_tensor(image_normalize)
             image_list.append(tensor_img)
+        split_size = math.ceil(len(image_list)/batch_size)
+        print('Splitting the tensor into {} sizes each with {} images'.format(batch_size, split_size))
+        tensor_data = torch.cat(image_list).split(batch_size)
         tensor_data = torch.cat(image_list)
-        return self.shuffleAndSplit(tensor_data, batch_size)
+        return tensor_data
 
-    def shuffleAndSplit(self, data, batchSize):
+    def appendAndShuffle(data):
         finalData = list()
         for images, label in data:
             print('Processing for {} label'.format(label))
             label = torch.as_tensor([int(label)])
             for oneImage in images:
-                finalData.append(oneImage)
+                finalData.append((oneImage, label))
         random.shuffle(finalData)
-        finalData = torch.cat(finalData).split(batchSize)
         return finalData
+
+    def dataGenerator(data, batch_size=16):
+        return DataLoader(data, batch_size=batch_size)
         
