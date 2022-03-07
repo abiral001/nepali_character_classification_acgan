@@ -86,7 +86,7 @@ class absDis(nn.Module):
         self.realOrFake=nn.Linear(4*4*512, 1)
         self.whichDigit=nn.Linear(4*4*512, classes)
         self.sigmoid = nn.Sigmoid()
-        self.softmax = nn.Softmax()
+        self.softmax = nn.LogSoftmax(dim=1)
         
     def forward(self, x):
         x = x.float()

@@ -41,5 +41,6 @@ class ABSNormalize:
         return finalData
 
     def dataGenerator(data, batch_size=16):
+        random.shuffle(data)
         return DataLoader(data, batch_size=batch_size)
         
