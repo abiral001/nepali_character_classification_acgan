@@ -2,17 +2,15 @@ import os
 from argparse import ArgumentParser
 
 from modules.absNormalize import ABSNormalize
-from modules.absModel import absGen, absDis
 from modules.absParams import ABSparams
+from modules.absTraining import ABStraining
 
 if __name__ == '__main__':
-    parser = ArgumentParser(description='Nepali Character Recognition using AC GAN')
-    parser.add_argument('-m', '--mode', type=str, default='training')
-    parser.add_argument('-d', '--device', type=str, default='CPU')
-    parser.add_argument('-s', '--source', type=str, help="Data Images used for training")
+    parser = ArgumentParser(description="Nepali Character Recognition using ACGAN")
+    parser.add_argument('-t', '--training', type=str, default="Training")
+    parser.add_argument('-m', '--machine', type=str, default='cpu')
     args = parser.parse_args()
-
-    
-
-
-    
+    if args.training == "Training":
+        mod = ABStraining.startTraining()
+    else:
+        print("Not optimized")
